@@ -1,14 +1,24 @@
 import React from 'react'
+import { useEffect } from 'react'
 import { Route, BrowserRouter } from 'react-router-dom'
+import Header from '../components/Header'
+import Landing from '../components/Landing'
+import { fetchUser } from '../actions'
+import { useDispatch } from 'react-redux'
 
-const Landing = () => <h2>Landing</h2>
-const Header = () => <h2>Header</h2>
 const DashBoard = () => <h2>DashBoard</h2>
 const SurveyNew = () => <h2>SurveyNew</h2>
 
 const App = () => {
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(fetchUser())
+    }, [])
+
     return (
-        <div>
+        <div className="container">
             <BrowserRouter>
                 <Header />
                 <Route exact path="/" component={Landing} />
