@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import Payment from '../components/Payment'
 
 const Header = () => {
     const state = useSelector(state => ({ auth: state.auth }))
@@ -12,7 +13,13 @@ const Header = () => {
             case false:
                 return <li><a href="/auth/google">Log in with Google</a></li>
             default:
-                return <li><a href="/api/logout">Log out</a></li>
+                return [
+                    <>
+                        <li key='1'><Payment /></li>
+                        <li key='2' style={{ margin: '0 10px' }}>Credits: {state.auth.credits}</li>
+                        <li key='3'><a href="/api/logout">Log out</a></li>
+                    </>
+                ]
         }
 
     }
