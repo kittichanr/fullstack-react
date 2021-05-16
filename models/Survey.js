@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const { Schema, model } = mongoose
-import recipientSchema from './Recipients'
+const recipientSchema = require('./Recipients')
 
 const surveySchema = new Schema({
     title: String,

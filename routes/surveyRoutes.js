@@ -4,8 +4,14 @@ const requireCredits = require('../middlewares/requireCredits')
 const sgMail = require("@sendgrid/mail");
 
 const Survey = mongoose.model('surveys')
+const keys = require('../config/keys');
+const surveyTemplate = require('../services/emailTemplates/surveyTemplate.js');
 
 module.exports = app => {
+    app.get('/api/surveys/thank', (req, res) => {
+        res.send('Thank you for voting!')
+    })
+
     app.post('/api/surveys',
         requireLogin,
         requireCredits,
@@ -21,15 +27,39 @@ module.exports = app => {
                 dateSent: Date.now()
             })
 
-            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-            
+            sgMail.setApiKey(keys.sendGridKey);
+
             const msg = {
-                to: "test@example.com",
-                from: "test@example.com",
-                subject: "Sending with Twilio SendGrid is Fun",
-                text: "and easy to do anywhere, even with Node.js",
-                html: `<div> ${survey.body} </div>`,
+                personalizations: [{
+                    to: {
+                        email: recipients
+                    }
+                }],
+                from: {
+                    email: 'petchkubbb@gmail.com'
+                },
+                subject: subject,
+                content: [{
+                    type: 'text/html',
+                    value: surveyTemplate(body),
+                }]
             };
-            sgMail.send(msg);
+
+            sgMail
+                .send(msg)
+                .then(async () => {
+                    try {
+                        survey.save()
+                        req.user.credits -= 1
+                        const user = await req.user.save()
+
+                        res.send(user)
+                    } catch (error) {
+                        res.status(422).send(error)
+                    }
+                })
+                .catch((error) => {
+                    res.status(422).send(error)
+                })
         })
 }
