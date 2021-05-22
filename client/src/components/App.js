@@ -3,12 +3,11 @@ import { useEffect } from 'react'
 import { Route, BrowserRouter } from 'react-router-dom'
 import Header from '../components/Header'
 import Landing from '../components/Landing'
+import DashBoard from '../components/DashBoard'
+import SurveyNew from '../components/surveys/SurveyNew'
 
 import { fetchUser } from '../actions'
 import { useDispatch } from 'react-redux'
-
-const DashBoard = () => <h2>DashBoard</h2>
-const SurveyNew = () => <h2>SurveyNew</h2>
 
 const App = () => {
 
